@@ -1,0 +1,100 @@
+---
+title: "ANOVA - Analysis of variance"
+output: html_notebook
+---
+***
+
+#### ***To confirm if the busiest days for Clerical staff are Wednesdays and Tuesdays***
+
+***
+#### Importing dataset
+```{r}
+anova = read.table("C:/Users/Supriya Khadake/Documents/Projects/ANOVA/Anova.txt", header = T)
+
+#Checking first few records of the dataset
+head(anova)
+```
+#### Statistical Description of the dataset
+```{r}
+summary(anova)
+```
+#### Structure of the dataset
+```{r}
+str(anova)
+```
+#### Assigning variables
+```{r}
+day = anova$DAY
+hours = anova$HOURS
+mail = anova$MAIL
+cert = anova$CERT
+acc = anova$ACC
+change = anova$CHANGE
+check = anova$CHECK
+misc = anova$MISC
+tickets = anova$TICKETS
+```
+
+***
+#### Plotting Day against Hours
+```{r}
+plot(hours ~ day)
+```
+***Observe the box plot. Can you confirm that the hours in Tuesday is the highest? Why?***
+
+- When variance is small it is easy to compare more than 2 groups based on median and mean value.
+
+- Here for each group variance varies and is very large for few groups.
+
+- We cannot simply read mean or median values and decide the highest hours for any day.
+
+- We will have to take variance in consideration.
+
+- for eg: median value for Tuesday is highest among all but not same with mean value and hence we cannot interpret based on this statistical description.
+
+***
+
+#### ANOVA F-tests the hypothesis:
+- Null hypothesis: H0: Averages / Group mean value in hours by different days is equal
+
+  -µ1 = µ2 = µ3 = µ4 = µ5 = µ6
+
+- Alternate hypothesis: Ha: Not all the averages / group mean value in hours by different days are equal
+
+Where,
+  -µ1 = Group mean in hours by Friday
+    
+  -µ2 = Group mean in hours by Monday
+    
+  -µ3 = Group mean in hours by Saturday
+    
+  -µ4 = Group mean in hours by Tuesday
+    
+  -µ5 = Group mean in hours by Thursday
+    
+  -µ6 = Group mean in hours by Wednesday
+
+```{r}
+anova_model = lm(hours ~ day)
+summary(anova_model)
+```
+***
+Based on F-statistic: 4.227 and 5 and 46 DF with p-value: 0.003033 < 0.05
+
+We reject Null hypothesis and help manager with this saying that the group means in hours by different days are not same
+
+***
+- Groups which are not significant
+
+Monday, Saturday and Thursday coefficient have p-value more than 0.05 hence they are not significant
+
+And as these groups are not significant, then the corresponding coefficient can be assumed equal to zero
+
+- Groups which are significant
+
+Tuesday and Wednesday coefficient have p-value less than 0.05 hence they are significant
+
+In particular, the group mean value in hours involved in Tuesday is 20.531 higher than the group mean value in hours involved in Friday.
+and the group mean value in hours involved in Wednesday is 23.342 higher than the group mean value in hours involved in Friday
+
+***
